@@ -1,21 +1,30 @@
+# -------Librerias ------
 import requests
-
 from datetime import datetime
 import csv
 import time
 
+
+# -------variables ------
 crytos=["MIM", "DAI", "USDT", "USDC"]
-csv_file=[["Nombre","Activos Totales","APY","Fecha"]]
 i=True
 
+
+# -------Generar CSV ------
+csv_file=[["Nombre","Activos Totales","APY","Fecha"]]
 file= open('data.csv', 'w') 
 writer = csv.writer(file)
 writer.writerows(csv_file)
 file.close()
+
+
+# ------- Bucle  ------
 while i:
-	
+	# -------abrir CSV ------
 	file= open('data.csv', 'a') 
 	writer = csv.writer(file)
+
+	# ------- pedir informacion------
 	URL = "https://test-api.yearn.network/v1/chains/250/vaults/get"
 	page = requests.get(URL)
 	data=page.json()
@@ -26,6 +35,7 @@ while i:
 
 
 	csv_data=[]
+	# -------almacenar en variables ------
 	for i in range(len(data)):
 
 		symbol=data[i]["symbol"][2:]
@@ -38,8 +48,11 @@ while i:
 			lista.append(date.strftime("%d/%m/%Y, %H:%M:%S"))
 			
 			csv_data.append(lista)
+
+	# -------guardar en CSV------
 	writer.writerows(csv_data)
 	print(date)
 	file.close()
+	# ------- esperar ------
 	time.sleep(1200)
 
